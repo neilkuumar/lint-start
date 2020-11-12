@@ -31,16 +31,15 @@ async function prettierSetup() {
     // check if user already has created .prettierrc
     const prettierrcFilePath = path.resolve(`${PROJECT_ROOT}`, PRETTIERRC);
 
-    // CHECK FOR REACT
-    const prettierrc = HAS_REACT ? `${PRETTIERRC}_react` : `${PRETTIERRC}_base`;
     // get the prettier config file
+    const prettierrc = HAS_REACT ? `${PRETTIERRC}_react` : `${PRETTIERRC}_base`;
     const prettierConfigFile = path.resolve(
       `${PRETTIER_CONFIG_FOLDER}`,
       prettierrc,
     );
 
+    // modify permissions and copy/overwrite file
     await executeCmd(`chmod -R 755 ${prettierConfigFile}`);
-
     fs.copyFileSync(prettierConfigFile, prettierrcFilePath);
 
     // check if user already has created .prettierignore
@@ -48,6 +47,7 @@ async function prettierSetup() {
       `${PROJECT_ROOT}`,
       PRETTIERIGNORE,
     );
+
     const prettierignoreExists = fs.existsSync(prettierignoreFilePath);
 
     if (!prettierignoreExists) {
