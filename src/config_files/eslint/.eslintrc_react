@@ -1,0 +1,57 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "airbnb",
+    "airbnb/hooks"
+  ],
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    },
+    "import/resolver": {
+      "node": {
+        "moduleDirectory": ["node_modules", "."]
+      }
+    }
+  },
+  "plugins": ["prettier"],
+  "rules": {
+    "object-curly-newline": [
+      "error",
+      {
+        "ObjectExpression": { "consistent": true },
+        "ObjectPattern": { "multiline": true, "consistent": true },
+        "ImportDeclaration": { "multiline": true, "consistent": true },
+        "ExportDeclaration": { "multiline": true, "consistent": true }
+      }
+    ],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/jsx-wrap-multilines": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "react/jsx-one-expression-per-line": "off"
+  },
+  "globals": {
+    "React": "writable",
+    "window": true
+  }
+}

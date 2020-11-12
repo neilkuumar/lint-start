@@ -1,36 +1,34 @@
 const ora = require('ora');
 
-const chalk = require('./chalk');
-const methods = require('./methods');
-
-let spinner;
+const chalk = require('./chalk_helper');
+const eslint = require('./eslint_methods');
+const prettier = require('./prettier_methods');
+const helpers = require('./helpers');
+const { runAction } = require('./helpers');
 
 async function setup() {
   try {
-    // check if git has been setup
-    const gitIsSetup = await methods.isGitRepo();
+    const gitIsSetup = await helpers.isGitRepo();
     if (!gitIsSetup) {
       throw new Error(`${chalk.error('Please setup git and run again')}`);
     }
 
-    spinner = ora(`${chalk.action('Setup AirBnB Eslint Config')}`).start();
-    await methods.airbnbEslintConfig();
-    spinner.stopAndPersist({ symbol: '✅' });
+    await runAction({
+      action: eslint.airbnbEslintConfig,
+      text: 'setup airbnb eslint config',
+    });
 
-    spinner = ora(`${chalk.action('Setup Prettier Eslint Config')}`).start();
-    await methods.prettierEslintConfig();
-    spinner.stopAndPersist({ symbol: '✅' });
+    await runAction({
+      action: prettier.prettierEslintConfig,
+      text: 'setup prettier eslint config',
+    });
 
-    spinner = ora(`${chalk.action('Setup Prettier')}`).start();
-    await methods.prettierSetup();
-    spinner.stopAndPersist({ symbol: '✅' });
-
-    // create files
+    await runAction({
+      action: prettier.prettierSetup,
+      text: 'setup prettier',
+    });
   } catch (error) {
-    if (spinner) {
-      spinner.stopAndPersist({ symbol: '❌' });
-    }
-    console.error(chalk.error(error.message));
+    console.error(chalk.error(error));
   }
 }
 
