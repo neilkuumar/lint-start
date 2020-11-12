@@ -2,10 +2,13 @@ const fs = require('fs');
 const path = require('path');
 
 const { executeCmd } = require('./helpers');
+const chalk = require('./chalk');
 
 const ESLINTRC = '.eslintrc';
 const PRETTIERRC = '.prettierrc';
 const PRETTIERIGNORE = '.prettierignore';
+const PACKAGEJSON = 'package.json';
+const REACT = 'react';
 const CONFIG_FOLDER = `${__dirname}/config_files/`;
 const PROJECT_ROOT = require.main.paths[0]
   .split('node_modules')[0]
@@ -19,12 +22,31 @@ async function isGitRepo() {
  * Install eslint and setup config
  */
 async function airbnbEslintConfig() {
+  // check if the project is using react
+  const packagePath = path.resolve(`${PROJECT_ROOT}`, PACKAGEJSON);
+  const packageExists = fs.existsSync(packagePath);
+
+  if (!packageExists) throw new Error(chalk.error('No package.json detected!'));
+
+  const packageJson = JSON.parse(fs.readFileSync(packagePath));
+
+  const { dependencies, devDependencies } = packageJson;
+  const allDependencies = { ...dependencies, ...devDependencies };
+
+  const hasReact = Object.keys(allDependencies).some((dep) => dep === REACT);
+
   // install airbnb eslint config
-  await executeCmd('npx install-peerdeps --dev eslint-config-airbnb-base');
+  if (hasReact) {
+    await executeCmd('npx install-peerdeps --dev eslint-config-airbnb');
+  } else {
+    await executeCmd('npx install-peerdeps --dev eslint-config-airbnb-base');
+  }
+
+  const eslintConfig = hasReact ? `${ESLINTRC}_react` : `${ESLINTRC}_base`;
 
   // get the eslint config file
   const eslintrcConfig = JSON.parse(
-    fs.readFileSync(path.resolve(`${CONFIG_FOLDER}`, `${ESLINTRC}_base`)),
+    fs.readFileSync(path.resolve(`${CONFIG_FOLDER}`, eslintConfig)),
   );
 
   // check for existing .eslintrc
@@ -61,9 +83,8 @@ async function prettierSetup() {
     await executeCmd('npm install --save-dev --save-exact prettier');
 
     // check if user already has created .prettierrc
-    const prettierrc = fs.existsSync(
-      path.resolve(`${PROJECT_ROOT}`, PRETTIERRC),
-    );
+    const prettierrcFilePath = path.resolve(`${PROJECT_ROOT}`, PRETTIERRC);
+    const prettierrc = fs.existsSync(prettierrcFilePath);
 
     if (!prettierrc) {
       // get the prettier config file
@@ -74,25 +95,24 @@ async function prettierSetup() {
 
       await executeCmd(`chmod -R 755 ${prettierConfigFile}`);
 
-      fs.copyFileSync(
-        prettierConfigFile,
-        path.resolve(`${PROJECT_ROOT}`, PRETTIERRC),
-      );
+      fs.copyFileSync(prettierConfigFile, prettierrcFilePath);
     }
 
     // check if user already has created .prettierignore
-    const prettierignore = fs.existsSync(
-      path.resolve(`${PROJECT_ROOT}`, PRETTIERIGNORE),
+    const prettierignoreFilePath = path.resolve(
+      `${PROJECT_ROOT}`,
+      PRETTIERIGNORE,
     );
+    const prettierignoreExists = fs.existsSync(prettierignoreFilePath);
 
-    if (!prettierignore) {
-      const filename = '.prettierignore';
+    if (!prettierignoreExists) {
+      const filename = PRETTIERIGNORE;
       const file = path.resolve(`${CONFIG_FOLDER}`, filename);
 
       // give read and write access to the file
       await executeCmd(`chmod -R 755 ${file}`);
 
-      fs.copyFileSync(file, path.resolve(`${PROJECT_ROOT}`, filename));
+      fs.copyFileSync(file, prettierignoreFilePath);
     }
   } catch (error) {
     console.error(error);
