@@ -13,8 +13,9 @@ const ESLINTRC = '.eslintrc';
 /**
  * Install eslint and setup config
  */
-async function airbnbEslintConfig() {
+async function eslintConfig() {
   await executeCmd('npx install-peerdeps --dev babel-eslint');
+  await executeCmd('npm install -D eslint-plugin-jest');
 
   // install airbnb eslint config
   if (HAS_REACT) {
@@ -23,11 +24,11 @@ async function airbnbEslintConfig() {
     await executeCmd('npx install-peerdeps --dev eslint-config-airbnb-base');
   }
 
-  const eslintConfig = HAS_REACT ? `${ESLINTRC}_react` : `${ESLINTRC}_base`;
+  const config = HAS_REACT ? `${ESLINTRC}_react` : `${ESLINTRC}_base`;
 
   // get the eslint config file
   const eslintrcConfig = JSON.parse(
-    fs.readFileSync(path.resolve(`${ESLINT_CONFIG_FOLDER}`, eslintConfig)),
+    fs.readFileSync(path.resolve(`${ESLINT_CONFIG_FOLDER}`, config)),
   );
 
   // check for existing .eslintrc
@@ -57,5 +58,5 @@ async function airbnbEslintConfig() {
 }
 
 module.exports = {
-  airbnbEslintConfig,
+  eslintConfig,
 };

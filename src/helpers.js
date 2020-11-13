@@ -1,8 +1,11 @@
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
+const path = require('path');
+const fs = require('fs');
 
 const ora = require('ora');
 const chalk = require('./chalk_helper');
+const { COMMANDS, PROJECT_ROOT, PACKAGEJSON, REACT } = require('./constants');
 
 /**
  * Executes a shell command
@@ -24,7 +27,7 @@ async function executeCmd(command) {
  * @returns {Boolean}
  */
 async function isGitRepo() {
-  return executeCmd('git rev-parse --is-inside-work-tree 2>/dev/null');
+  return executeCmd(COMMANDS.isGitRepo);
 }
 
 /**
@@ -44,4 +47,31 @@ async function runAction({ action, text }) {
   }
 }
 
-module.exports = { executeCmd, isGitRepo, runAction };
+/**
+ * Returns true if the repo has react as a dependency
+ */
+function doesProjectHaveReact() {
+  const packagePath = path.resolve(`${PROJECT_ROOT}`, PACKAGEJSON);
+  const packageExists = fs.existsSync(packagePath);
+
+  if (!packageExists) throw new Error(chalk.error('No package.json detected!'));
+
+  const packageJson = JSON.parse(fs.readFileSync(packagePath));
+
+  // merge all dependencies incase user has installed in wrong location
+  const { dependencies, devDependencies } = packageJson;
+  const allDependencies = { ...dependencies, ...devDependencies };
+
+  // check if react is included
+  const hasReact = Object.keys(allDependencies).some((dep) => dep === REACT);
+
+  if (hasReact) {
+    console.log(chalk.msg('-- ⚛️ react detected --'));
+  } else {
+    console.log(chalk.msg('-- setting up for nodejs --'));
+  }
+
+  return hasReact;
+}
+
+module.exports = { executeCmd, isGitRepo, runAction, doesProjectHaveReact };

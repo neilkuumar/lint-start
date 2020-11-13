@@ -16,8 +16,8 @@ async function setup() {
     }
 
     await runAction({
-      action: eslint.airbnbEslintConfig,
-      text: 'setup airbnb eslint config',
+      action: eslint.eslintConfig,
+      text: 'setup eslint config',
     });
 
     await runAction({

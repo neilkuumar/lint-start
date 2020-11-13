@@ -1,3 +1,3 @@
-const { setup } = require("./src");
+const { setup } = require('./src/main');
 
 setup();
