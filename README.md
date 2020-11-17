@@ -4,6 +4,9 @@ There are plenty of great bootstrap projects out there, however, sometimes you h
 
 The idea here is a one time command that you can run to setup linting and prettier on your current project.
 
+For example:
 ```zsh
 npx lint-start
 ```
+
+-- WIP --
