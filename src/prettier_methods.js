@@ -5,7 +5,6 @@ const { executeCmd } = require('./helpers');
 const {
   PROJECT_ROOT,
   PRETTIER_CONFIG_FOLDER,
-  HAS_REACT,
   COMMANDS,
 } = require('./constants');
 
@@ -24,7 +23,7 @@ async function prettierEslintConfig() {
 /**
  * Install prettier and setup config
  */
-async function prettierSetup() {
+async function prettierSetup(hasReact) {
   try {
     // install prettier
     await executeCmd(COMMANDS.install.prettier);
@@ -33,7 +32,7 @@ async function prettierSetup() {
     const prettierrcFilePath = path.resolve(`${PROJECT_ROOT}`, PRETTIERRC);
 
     // get the prettier config file
-    const prettierrc = HAS_REACT ? `${PRETTIERRC}_react` : `${PRETTIERRC}_base`;
+    const prettierrc = hasReact ? `${PRETTIERRC}_react` : `${PRETTIERRC}_base`;
     const prettierConfigFile = path.resolve(
       `${PRETTIER_CONFIG_FOLDER}`,
       prettierrc,

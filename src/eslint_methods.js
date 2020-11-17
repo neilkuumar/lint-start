@@ -2,30 +2,25 @@ const fs = require('fs');
 const path = require('path');
 
 const { executeCmd } = require('./helpers');
-const {
-  PROJECT_ROOT,
-  ESLINT_CONFIG_FOLDER,
-  HAS_REACT,
-  COMMANDS,
-} = require('./constants');
+const { PROJECT_ROOT, ESLINT_CONFIG_FOLDER, COMMANDS } = require('./constants');
 
 const ESLINTRC = '.eslintrc';
 
 /**
  * Install eslint and setup config
  */
-async function eslintConfig() {
+async function eslintConfig(hasReact) {
   await executeCmd(COMMANDS.install.babelEslint);
   await executeCmd(COMMANDS.install.eslint.plugin.jest);
 
   // install airbnb eslint config
-  if (HAS_REACT) {
+  if (hasReact) {
     await executeCmd(COMMANDS.install.eslint.config.airbnb);
   } else {
     await executeCmd(COMMANDS.install.eslint.config.airbnbBase);
   }
 
-  const config = HAS_REACT ? `${ESLINTRC}_react` : `${ESLINTRC}_base`;
+  const config = hasReact ? `${ESLINTRC}_react` : `${ESLINTRC}_base`;
 
   // get the eslint config file
   const eslintrcConfig = JSON.parse(
@@ -41,6 +36,7 @@ async function eslintConfig() {
     ? JSON.parse(fs.readFileSync(eslintFilePath))
     : {};
 
+  // TODO: work out the best way to handle existing config
   // merge existing config with new config
   const eslint = {
     ...userConfig,

@@ -36,6 +36,8 @@
   },
   "plugins": ["jest", "prettier"],
   "rules": {
+    "implicit-arrow-linebreak": "off",
+    "function-paren-newline": "off",
     "object-curly-newline": [
       "error",
       {

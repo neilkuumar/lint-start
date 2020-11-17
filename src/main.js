@@ -1,8 +1,8 @@
+const ora = require('ora');
 const chalk = require('./chalk_helper');
 const eslint = require('./eslint_methods');
 const prettier = require('./prettier_methods');
 const helpers = require('./helpers');
-const { runAction } = require('./helpers');
 
 /**
  * Entry point to the application
@@ -15,17 +15,25 @@ async function setup() {
       throw new Error(`${chalk.error('Please setup git and run again')}`);
     }
 
-    await runAction({
-      action: eslint.eslintConfig,
+    const hasReact = helpers.doesProjectHaveReact();
+    const spinner = ora();
+    if (hasReact) {
+      spinner.info(chalk.msg('-- setting up for react --'));
+    } else {
+      spinner.info(chalk.msg('-- setting up for nodejs --'));
+    }
+
+    await helpers.runAction({
+      action: () => eslint.eslintConfig(hasReact),
       text: 'setup eslint config',
     });
 
-    await runAction({
-      action: prettier.prettierEslintConfig,
+    await helpers.runAction({
+      action: () => prettier.prettierEslintConfig(hasReact),
       text: 'setup prettier eslint config',
     });
 
-    await runAction({
+    await helpers.runAction({
       action: prettier.prettierSetup,
       text: 'setup prettier',
     });

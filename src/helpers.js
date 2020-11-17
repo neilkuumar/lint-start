@@ -1,5 +1,5 @@
 const util = require('util');
-const exec = util.promisify(require('child_process').exec);
+const childProcess = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
@@ -7,19 +7,16 @@ const ora = require('ora');
 const chalk = require('./chalk_helper');
 const { COMMANDS, PROJECT_ROOT, PACKAGEJSON, REACT } = require('./constants');
 
+const exec = util.promisify(childProcess.exec);
+
 /**
  * Executes a shell command
  * @param {String} command
  * @returns {Promise}
  */
 async function executeCmd(command) {
-  try {
-    const { stdout } = await exec(command);
-    return stdout;
-  } catch (e) {
-    console.error(e);
-    return e;
-  }
+  const { stdout } = await exec(command);
+  return stdout;
 }
 
 /**
@@ -40,9 +37,9 @@ async function runAction({ action, text }) {
   const spinner = ora(`${chalk.action(text)}`).start();
   try {
     await action();
-    spinner.stopAndPersist({ symbol: '✅' });
+    spinner.succeed();
   } catch (error) {
-    spinner.stopAndPersist({ symbol: '❌' });
+    spinner.fail();
     throw error;
   }
 }
@@ -64,12 +61,6 @@ function doesProjectHaveReact() {
 
   // check if react is included
   const hasReact = Object.keys(allDependencies).some((dep) => dep === REACT);
-
-  if (hasReact) {
-    console.log(chalk.msg('-- ⚛️ react detected --'));
-  } else {
-    console.log(chalk.msg('-- setting up for nodejs --'));
-  }
 
   return hasReact;
 }

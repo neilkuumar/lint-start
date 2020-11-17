@@ -8,6 +8,12 @@
   },
   "author": "",
   "license": "ISC",
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": [
+      "html"
+    ]
+  },
   "dependencies": {
     "chalk": "^4.1.0",
     "ora": "^5.1.0"
