@@ -6,6 +6,7 @@ const {
   PROJECT_ROOT,
   ESLINT_CONFIG_FOLDER,
   HAS_REACT,
+  COMMANDS,
 } = require('./constants');
 
 const ESLINTRC = '.eslintrc';
@@ -14,14 +15,14 @@ const ESLINTRC = '.eslintrc';
  * Install eslint and setup config
  */
 async function eslintConfig() {
-  await executeCmd('npx install-peerdeps --dev babel-eslint');
-  await executeCmd('npm install -D eslint-plugin-jest');
+  await executeCmd(COMMANDS.install.babelEslint);
+  await executeCmd(COMMANDS.install.eslint.plugin.jest);
 
   // install airbnb eslint config
   if (HAS_REACT) {
-    await executeCmd('npx install-peerdeps --dev eslint-config-airbnb');
+    await executeCmd(COMMANDS.install.eslint.config.airbnb);
   } else {
-    await executeCmd('npx install-peerdeps --dev eslint-config-airbnb-base');
+    await executeCmd(COMMANDS.install.eslint.config.airbnbBase);
   }
 
   const config = HAS_REACT ? `${ESLINTRC}_react` : `${ESLINTRC}_base`;

@@ -6,6 +6,7 @@ const {
   PROJECT_ROOT,
   PRETTIER_CONFIG_FOLDER,
   HAS_REACT,
+  COMMANDS,
 } = require('./constants');
 
 const PRETTIERRC = '.prettierrc';
@@ -16,8 +17,8 @@ const PRETTIERIGNORE = '.prettierignore';
  */
 async function prettierEslintConfig() {
   // install prettier eslint config
-  await executeCmd('npm install --save-dev eslint-config-prettier');
-  await executeCmd('npm install --save-dev eslint-plugin-prettier');
+  await executeCmd(COMMANDS.install.eslint.config.prettier);
+  await executeCmd(COMMANDS.install.eslint.plugin.prettier);
 }
 
 /**
@@ -26,7 +27,7 @@ async function prettierEslintConfig() {
 async function prettierSetup() {
   try {
     // install prettier
-    await executeCmd('npm install --save-dev --save-exact prettier');
+    await executeCmd(COMMANDS.install.prettier);
 
     // check if user already has created .prettierrc
     const prettierrcFilePath = path.resolve(`${PROJECT_ROOT}`, PRETTIERRC);

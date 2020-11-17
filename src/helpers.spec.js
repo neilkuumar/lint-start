@@ -7,6 +7,37 @@ const helpers = require('./helpers');
 jest.mock('child_process');
 jest.mock('ora');
 
+describe('executeCmd', () => {
+  beforeEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('should handle a successful command', () => {
+    const cmd = 'execute order 66';
+    helpers.executeCmd(cmd);
+    expect(childProcess.exec.mock.calls[0][0]).toBe(cmd);
+  });
+
+  it('should handle a failed command', () => {
+    const cmd = 'execute order 66';
+    const expectedError = 'NEVER!';
+    childProcess.exec.mockImplementation(() => {
+      throw new Error(expectedError);
+    });
+
+    const consoleError = console.error;
+    console.error = jest.fn();
+
+    try {
+      helpers.executeCmd(cmd);
+    } catch (error) {
+      expect(childProcess.exec.mock.calls[0][0]).toBe(cmd);
+      expect(error).toBe(expectedError);
+      console.error = consoleError;
+    }
+  });
+});
+
 describe('isGitRepo()', () => {
   beforeEach(() => {
     jest.restoreAllMocks();
