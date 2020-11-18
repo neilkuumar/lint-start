@@ -2,9 +2,16 @@ const fs = require('fs');
 const path = require('path');
 
 const { executeCmd } = require('./helpers');
-const { PROJECT_ROOT, ESLINT_CONFIG_FOLDER, COMMANDS } = require('./constants');
+const {
+  PROJECT_ROOT,
+  ESLINT_CONFIG_FOLDER,
+  COMMANDS,
+  ESLINTRC,
+} = require('./constants');
 
-const ESLINTRC = '.eslintrc';
+function getUserEslintrc(eslintFilePath) {
+  return JSON.parse(fs.readFileSync(eslintFilePath));
+}
 
 /**
  * Install eslint and setup config
@@ -27,14 +34,12 @@ async function eslintConfig(hasReact) {
     fs.readFileSync(path.resolve(`${ESLINT_CONFIG_FOLDER}`, config)),
   );
 
-  // check for existing .eslintrc
+  // // check for existing .eslintrc
   const eslintFilePath = path.resolve(`${PROJECT_ROOT}`, ESLINTRC);
   const existingEslintrc = fs.existsSync(eslintFilePath);
 
   // detect user config
-  const userConfig = existingEslintrc
-    ? JSON.parse(fs.readFileSync(eslintFilePath))
-    : {};
+  const userConfig = existingEslintrc ? getUserEslintrc(eslintFilePath) : {};
 
   // TODO: work out the best way to handle existing config
   // merge existing config with new config
@@ -56,4 +61,5 @@ async function eslintConfig(hasReact) {
 
 module.exports = {
   eslintConfig,
+  getUserEslintrc,
 };

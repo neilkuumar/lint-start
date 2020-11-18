@@ -1,5 +1,9 @@
 const PACKAGEJSON = 'package.json';
 const REACT = 'react';
+const ESLINTRC = '.eslintrc';
+
+const PRETTIERRC = '.prettierrc';
+const PRETTIERIGNORE = '.prettierignore';
 
 /**
  * Path to config folder
@@ -52,4 +56,7 @@ module.exports = {
   COMMANDS,
   PACKAGEJSON,
   REACT,
+  ESLINTRC,
+  PRETTIERRC,
+  PRETTIERIGNORE,
 };

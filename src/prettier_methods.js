@@ -6,10 +6,9 @@ const {
   PROJECT_ROOT,
   PRETTIER_CONFIG_FOLDER,
   COMMANDS,
+  PRETTIERRC,
+  PRETTIERIGNORE,
 } = require('./constants');
-
-const PRETTIERRC = '.prettierrc';
-const PRETTIERIGNORE = '.prettierignore';
 
 /**
  * Install prettier eslint config
@@ -24,43 +23,38 @@ async function prettierEslintConfig() {
  * Install prettier and setup config
  */
 async function prettierSetup(hasReact) {
-  try {
-    // install prettier
-    await executeCmd(COMMANDS.install.prettier);
+  // install prettier
+  await executeCmd(COMMANDS.install.prettier);
 
-    // check if user already has created .prettierrc
-    const prettierrcFilePath = path.resolve(`${PROJECT_ROOT}`, PRETTIERRC);
+  // check if user already has created .prettierrc
+  const prettierrcFilePath = path.resolve(`${PROJECT_ROOT}`, PRETTIERRC);
 
-    // get the prettier config file
-    const prettierrc = hasReact ? `${PRETTIERRC}_react` : `${PRETTIERRC}_base`;
-    const prettierConfigFile = path.resolve(
-      `${PRETTIER_CONFIG_FOLDER}`,
-      prettierrc,
-    );
+  // get the prettier config file
+  const prettierrc = hasReact ? `${PRETTIERRC}_react` : `${PRETTIERRC}_base`;
+  const prettierConfigFile = path.resolve(
+    `${PRETTIER_CONFIG_FOLDER}`,
+    prettierrc,
+  );
 
-    // modify permissions and copy/overwrite file
-    await executeCmd(`chmod -R 755 ${prettierConfigFile}`);
-    fs.copyFileSync(prettierConfigFile, prettierrcFilePath);
+  // modify permissions and copy/overwrite file
+  await executeCmd(`chmod -R 755 ${prettierConfigFile}`);
+  fs.copyFileSync(prettierConfigFile, prettierrcFilePath);
 
-    // check if user already has created .prettierignore
-    const prettierignoreFilePath = path.resolve(
-      `${PROJECT_ROOT}`,
-      PRETTIERIGNORE,
-    );
+  // check if user already has created .prettierignore
+  const prettierignoreFilePath = path.resolve(
+    `${PROJECT_ROOT}`,
+    PRETTIERIGNORE,
+  );
 
-    const prettierignoreExists = fs.existsSync(prettierignoreFilePath);
+  const prettierignoreExists = fs.existsSync(prettierignoreFilePath);
 
-    if (!prettierignoreExists) {
-      const filename = PRETTIERIGNORE;
-      const file = path.resolve(`${PRETTIER_CONFIG_FOLDER}`, filename);
+  if (!prettierignoreExists) {
+    const file = path.resolve(`${PRETTIER_CONFIG_FOLDER}`, PRETTIERIGNORE);
 
-      // give read and write access to the file
-      await executeCmd(`chmod -R 755 ${file}`);
+    // give read and write access to the file
+    await executeCmd(`chmod -R 755 ${file}`);
 
-      fs.copyFileSync(file, prettierignoreFilePath);
-    }
-  } catch (error) {
-    console.error(error);
+    fs.copyFileSync(file, prettierignoreFilePath);
   }
 }
 

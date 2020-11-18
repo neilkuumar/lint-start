@@ -65,4 +65,9 @@ function doesProjectHaveReact() {
   return hasReact;
 }
 
-module.exports = { executeCmd, isGitRepo, runAction, doesProjectHaveReact };
+module.exports = {
+  executeCmd,
+  isGitRepo,
+  runAction,
+  doesProjectHaveReact,
+};
