@@ -6,6 +6,9 @@
   "scripts": {
     "test": "jest"
   },
+  "bin": {
+    "lint-start": "./index.js"
+  },
   "author": "",
   "license": "ISC",
   "jest": {

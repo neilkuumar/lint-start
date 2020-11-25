@@ -51,7 +51,13 @@ function doesProjectHaveReact() {
   const packagePath = path.resolve(`${PROJECT_ROOT}`, PACKAGEJSON);
   const packageExists = fs.existsSync(packagePath);
 
-  if (!packageExists) throw new Error(chalk.error('No package.json detected!'));
+  if (!packageExists) {
+    throw new Error(
+      chalk.error(
+        'No package.json detected! Please run this from the project root directory.',
+      ),
+    );
+  }
 
   const packageJson = JSON.parse(fs.readFileSync(packagePath));
 

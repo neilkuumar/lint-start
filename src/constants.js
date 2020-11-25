@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const PACKAGEJSON = 'package.json';
 const REACT = 'react';
 const ESLINTRC = '.eslintrc';
@@ -23,9 +25,7 @@ const PRETTIER_CONFIG_FOLDER = `${CONFIG_FOLDER}/prettier`;
 /**
  * The root of the project/repo
  */
-const PROJECT_ROOT = require.main.paths[0]
-  .split('node_modules')[0]
-  .slice(0, -1);
+const PROJECT_ROOT = fs.realpathSync(process.cwd());
 
 /**
  * Commands
