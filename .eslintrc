@@ -10,6 +10,15 @@
   "rules": {
     "implicit-arrow-linebreak": "off",
     "function-paren-newline": "off",
-    "no-console": "off"
+    "no-console": "off",
+    "object-curly-newline": [
+      "error",
+      {
+        "ObjectExpression": { "consistent": true },
+        "ObjectPattern": { "multiline": true, "consistent": true },
+        "ImportDeclaration": { "multiline": true, "consistent": true },
+        "ExportDeclaration": { "multiline": true, "consistent": true }
+      }
+    ]
   }
 }
