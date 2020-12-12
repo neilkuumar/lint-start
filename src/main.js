@@ -9,10 +9,11 @@ const helpers = require('./helpers');
  */
 async function setup() {
   try {
-    // only continue if git has been setup (allow user to rollback)
-    const gitIsSetup = await helpers.isGitRepo();
-    if (!gitIsSetup) {
-      throw new Error(`${chalk.error('Please setup git and run again')}`);
+    try {
+      // only continue if git has been setup (allow user to rollback)
+      await helpers.isGitRepo();
+    } catch (error) {
+      throw new Error('Please run within a project with git.');
     }
 
     const hasReact = helpers.doesProjectHaveReact();
