@@ -9,8 +9,22 @@ const {
   ESLINTRC,
 } = require('./constants');
 
-function getUserEslintrc(eslintFilePath) {
-  return JSON.parse(fs.readFileSync(eslintFilePath));
+function getUserEslintRcFilePath() {
+  // check for existing .eslintrc
+  const eslintFilePath = path.resolve(`${PROJECT_ROOT}`, ESLINTRC);
+  const existingEslintrc = fs.existsSync(eslintFilePath);
+
+  return [eslintFilePath, existingEslintrc];
+}
+
+function getUserEslintrc() {
+  const [eslintFilePath, existingEslintrc] = getUserEslintRcFilePath();
+
+  if (existingEslintrc) {
+    return JSON.parse(fs.readFileSync(eslintFilePath));
+  }
+
+  return null;
 }
 
 /**
@@ -34,12 +48,9 @@ async function eslintConfig(hasReact) {
     fs.readFileSync(path.resolve(`${ESLINT_CONFIG_FOLDER}`, config)),
   );
 
-  // // check for existing .eslintrc
-  const eslintFilePath = path.resolve(`${PROJECT_ROOT}`, ESLINTRC);
-  const existingEslintrc = fs.existsSync(eslintFilePath);
-
   // detect user config
-  const userConfig = existingEslintrc ? getUserEslintrc(eslintFilePath) : {};
+  const [eslintFilePath] = getUserEslintRcFilePath();
+  const userConfig = getUserEslintrc() || {};
 
   // TODO: work out the best way to handle existing config
   // merge existing config with new config
@@ -59,7 +70,15 @@ async function eslintConfig(hasReact) {
   await executeCmd(`npx prettier --write ${eslintFilePath}`);
 }
 
+async function rmEslintRc() {
+  const [eslintFilePath, existingEslintrc] = getUserEslintRcFilePath();
+  if (existingEslintrc) {
+    fs.rmSync(eslintFilePath);
+  }
+}
+
 module.exports = {
   eslintConfig,
   getUserEslintrc,
+  rmEslintRc,
 };

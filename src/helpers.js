@@ -48,10 +48,7 @@ async function runAction({ action, text }) {
   }
 }
 
-/**
- * Returns true if the repo has react as a dependency
- */
-function doesProjectHaveReact() {
+function getPackageJson() {
   const packagePath = path.resolve(`${PROJECT_ROOT}`, PACKAGEJSON);
   const packageExists = fs.existsSync(packagePath);
 
@@ -63,6 +60,14 @@ function doesProjectHaveReact() {
     );
   }
 
+  return packagePath;
+}
+
+/**
+ * Returns true if the repo has react as a dependency
+ */
+function doesProjectHaveReact() {
+  const packagePath = getPackageJson();
   const packageJson = JSON.parse(fs.readFileSync(packagePath));
 
   // merge all dependencies incase user has installed in wrong location
@@ -81,4 +86,5 @@ module.exports = {
   runAction,
   doesProjectHaveReact,
   uninstallDeps,
+  getPackageJson,
 };

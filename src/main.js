@@ -43,11 +43,33 @@ async function setup() {
   }
 }
 
+/**
+ * Remove npm dependencies and config files
+ */
 async function uninstall() {
   try {
+    try {
+      // only continue if git has been setup (allow user to rollback)
+      await helpers.isGitRepo();
+    } catch (error) {
+      throw new Error('Please run within a project with git.');
+    }
+
+    helpers.getPackageJson();
+
     await helpers.runAction({
       action: helpers.uninstallDeps,
-      text: 'uninstalling lint-start dependencies',
+      text: 'uninstalling lint-start npm dependencies',
+    });
+
+    await helpers.runAction({
+      action: eslint.rmEslintRc,
+      text: 'removing .eslintrc',
+    });
+
+    await helpers.runAction({
+      action: prettier.rmPrettierConfigFiles,
+      text: 'removing prettier config files',
     });
   } catch (error) {
     console.error(chalk.error(error));

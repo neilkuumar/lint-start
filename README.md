@@ -22,6 +22,16 @@ npx lint-start
 - `.eslintrc` pre-configured
 - `.prettierrc` pre-configured
 - `.prettierignore` pre-configured
+- It will add the following dependencies:
+
+```properties
+babel-eslint
+prettier
+eslint-plugin-jest
+eslint-plugin-prettier
+eslint-config-airbnb/eslint-config-airbnb-base
+eslint-config-prettier
+```
 
 This will come with some eslint/prettier rules out of the box but you can configure and customise them as normal.
 
@@ -30,6 +40,31 @@ This will come with some eslint/prettier rules out of the box but you can config
 - The project must be using git - this is so that you can easily roll back any unwanted changes.
 - The project must have a `package.json`.
 - It is recommended to remove any existing `eslint` or `prettier` config. The tool will attempt to merge existing `eslint` config rules, however, this feature may be removed in future if it proves troublesome.
+
+You can can set up `git` with:
+
+```properties
+git init
+```
+
+You can create a `package.json` with:
+
+```properties
+npm init
+```
+
+## Uninstalling/Rolling back
+
+```properties
+npx lint-start --uninstall
+```
+
+- This will remove any dependencies added by this library.
+- This essentially runs
+  `npm uninstall babel-eslint prettier eslint-plugin-jest eslint-plugin-prettier eslint-config-airbnb eslint-config-airbnb-base eslint-config-prettier`
+- Then it will delete the following files: `.eslintrc`, `.prettierrc` and `.prettierignore`.
+
+### Note: this is why the library will not run without git set up, so that you can easily undo any accidental changes
 
 ### Contributing
 

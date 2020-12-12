@@ -58,7 +58,31 @@ async function prettierSetup(hasReact) {
   }
 }
 
+async function rmPrettierConfigFiles() {
+  // check if user already has created .prettierrc
+  const prettierrcFilePath = path.resolve(`${PROJECT_ROOT}`, PRETTIERRC);
+
+  const prettierrcExists = fs.existsSync(prettierrcFilePath);
+
+  if (prettierrcExists) {
+    fs.rmSync(prettierrcFilePath);
+  }
+
+  // check if user already has created .prettierignore
+  const prettierignoreFilePath = path.resolve(
+    `${PROJECT_ROOT}`,
+    PRETTIERIGNORE,
+  );
+
+  const prettierignoreExists = fs.existsSync(prettierignoreFilePath);
+
+  if (prettierignoreExists) {
+    fs.rmSync(prettierignoreFilePath);
+  }
+}
+
 module.exports = {
   prettierEslintConfig,
   prettierSetup,
+  rmPrettierConfigFiles,
 };
