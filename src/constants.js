@@ -47,6 +47,8 @@ const COMMANDS = {
       },
     },
   },
+  uninstall:
+    'npm uninstall babel-eslint prettier eslint-plugin-jest eslint-plugin-prettier eslint-config-airbnb eslint-config-airbnb-base eslint-config-prettier',
 };
 
 module.exports = {

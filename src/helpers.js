@@ -27,6 +27,10 @@ async function isGitRepo() {
   return executeCmd(COMMANDS.isGitRepo);
 }
 
+async function uninstallDeps() {
+  return executeCmd(COMMANDS.uninstall);
+}
+
 /**
  * Runs an action with a spinner
  * @param {Object} action
@@ -76,4 +80,5 @@ module.exports = {
   isGitRepo,
   runAction,
   doesProjectHaveReact,
+  uninstallDeps,
 };

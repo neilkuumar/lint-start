@@ -43,4 +43,15 @@ async function setup() {
   }
 }
 
-module.exports = { setup };
+async function uninstall() {
+  try {
+    await helpers.runAction({
+      action: helpers.uninstallDeps,
+      text: 'uninstalling lint-start dependencies',
+    });
+  } catch (error) {
+    console.error(chalk.error(error));
+  }
+}
+
+module.exports = { setup, uninstall };
