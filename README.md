@@ -12,6 +12,12 @@ All you need to do is run the following from the root directory of your project!
 npx lint-start
 ```
 
+### What is npx?
+
+`npx` installs and runs packages from an npm registry, making it really easy to use CLI tools hosted on a registry [you can find out more here].
+
+[you can find out more here]: https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b
+
 ### At the moment this only supports Node or React projects
 
 ## What this will set up
