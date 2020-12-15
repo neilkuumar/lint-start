@@ -12,6 +12,10 @@ All you need to do is run the following from the root directory of your project!
 npx lint-start
 ```
 
+### If using VS Code
+
+It is recommended to run `Developer: Reload Window` to ensure the new config is picked up by the ide (cmd+shift+p then type `Developer: Reload Window`)
+
 ### What is npx?
 
 `npx` installs and runs packages from an npm registry, making it really easy to use CLI tools hosted on a registry [you can find out more here].
